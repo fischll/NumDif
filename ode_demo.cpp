@@ -1,5 +1,5 @@
 // compile with
-// gcc ode_demo.cpp bla/calcinverse.cpp bla/exception.cpp bla/localheap.cpp -lstdc++ -o ode_demo
+// g++ ode_demo.cpp bla/calcinverse.cpp bla/exception.cpp bla/localheap.cpp -std=c++11 -o ode_demo -fmax-errors=2 -fdiagnostics-color=auto
 //
 
 
