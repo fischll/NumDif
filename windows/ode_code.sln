@@ -8,7 +8,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ode_code", "ode_code.vcxpro
 		{97099BF6-581F-471D-97CA-FD1FF3192421} = {97099BF6-581F-471D-97CA-FD1FF3192421}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "bla", "bla.vcxproj", "{97099BF6-581F-471D-97CA-FD1FF3192421}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "bla", "bla\bla.vcxproj", "{97099BF6-581F-471D-97CA-FD1FF3192421}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

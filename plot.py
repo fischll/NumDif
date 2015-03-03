@@ -1,6 +1,8 @@
 import matplotlib.pyplot as plt
 
-f = open('pendulum_std.out','r')
+
+f = open('mass_spring.out','r')
+
 s=[]
 for line in f:
     line = line.strip()
