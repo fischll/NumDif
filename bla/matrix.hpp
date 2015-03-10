@@ -458,7 +458,7 @@ namespace ngbla
       int h = llist.size();
       int w = 0;
       for (auto row : llist)
-        w = max(w, int(row.size()));
+        w = max2(w, int(row.size()));
 
       SetSize (h, w);
       (*this) = 0.0;
@@ -1753,8 +1753,11 @@ namespace ngbla
     return res;
   }
   
-
-
+  template <typename T>
+  INLINE T RemoveConst( const T & x)
+  {
+    return x;
+  }
 
   template <int H, int W, int W2, typename T1, typename T2>
   INLINE auto operator* (const Mat<H,W,T1> & mat1, const Mat<W,W2,T2> & mat2) 

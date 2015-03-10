@@ -1,8 +1,6 @@
 import matplotlib.pyplot as plt
 
-
 f = open('mass_spring.out','r')
-
 s=[]
 for line in f:
     line = line.strip()

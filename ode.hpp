@@ -101,9 +101,9 @@ public:
     Vector<> f(yold.Size());
 
     func.Eval (t, yold, f);
-    ynew = yold + h/2 * f;
+    ynew = yold + h/2.0 * f;
 
-    func.Eval (t, ynew, f);
+    func.Eval (t+h/2.0, ynew, f);
     ynew = yold + h * f;
   }
 };
