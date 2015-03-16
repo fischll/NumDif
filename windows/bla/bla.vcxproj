@@ -83,7 +83,8 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>$(SolutionDir)\..\bla</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;NGS_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>
+      </PreprocessorDefinitions>
       <DisableSpecificWarnings>4522</DisableSpecificWarnings>
     </ClCompile>
     <Link>
@@ -96,7 +97,8 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>$(SolutionDir)\..\bla</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;NGS_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>
+      </PreprocessorDefinitions>
       <DisableSpecificWarnings>4522</DisableSpecificWarnings>
     </ClCompile>
     <Link>
@@ -111,7 +113,8 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>$(SolutionDir)\..\bla</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;NGS_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>
+      </PreprocessorDefinitions>
       <DisableSpecificWarnings>4522</DisableSpecificWarnings>
     </ClCompile>
     <Link>
@@ -128,7 +131,8 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <PreprocessorDefinitions>WIN32;NGS_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>
+      </PreprocessorDefinitions>
       <DisableSpecificWarnings>4522</DisableSpecificWarnings>
       <AdditionalIncludeDirectories>$(SolutionDir)\..\bla</AdditionalIncludeDirectories>
     </ClCompile>

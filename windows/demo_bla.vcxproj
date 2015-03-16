@@ -76,7 +76,8 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>$(SolutionDir)\..\bla</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32</PreprocessorDefinitions>
+      <PreprocessorDefinitions>
+      </PreprocessorDefinitions>
       <DisableSpecificWarnings>4522</DisableSpecificWarnings>
     </ClCompile>
     <Link>
@@ -91,7 +92,8 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>$(SolutionDir)\..\bla</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32</PreprocessorDefinitions>
+      <PreprocessorDefinitions>
+      </PreprocessorDefinitions>
       <DisableSpecificWarnings>4522</DisableSpecificWarnings>
     </ClCompile>
     <Link>
@@ -108,7 +110,8 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>$(SolutionDir)\..\bla</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32</PreprocessorDefinitions>
+      <PreprocessorDefinitions>
+      </PreprocessorDefinitions>
       <DisableSpecificWarnings>4522</DisableSpecificWarnings>
     </ClCompile>
     <Link>
@@ -128,7 +131,8 @@
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>$(SolutionDir)\..\bla</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <PreprocessorDefinitions>WIN32</PreprocessorDefinitions>
+      <PreprocessorDefinitions>
+      </PreprocessorDefinitions>
       <DisableSpecificWarnings>4522</DisableSpecificWarnings>
     </ClCompile>
     <Link>
