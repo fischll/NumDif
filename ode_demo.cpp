@@ -8,6 +8,7 @@
 using namespace ngbla;
 
 #include "ode.hpp"
+#include "RK_orig.hpp"
 
 
 
@@ -57,6 +58,7 @@ int main ()
 {
   ExplicitEuler expl_euler;
   ImprovedEuler impr_euler;
+  ClassicalRK RK_classical;
 
   ofstream out("data.out");
   My_First_ODE_Function func(1);
@@ -71,6 +73,9 @@ int main ()
   y0ms(0) = 1.0;
   y0ms(1) = 0;
   ODESolver (ms, impr_euler, 0, y0ms, 1000, 0.1, out2);
+
+  ofstream out3("mass_spring_RK.out");
+  ODESolver(ms, RK_classical, 0, y0ms, 1000, 0.1, out3);
 
   return 0;
 }
