@@ -108,7 +108,7 @@ public:
   }
 };
 
-
+/*
 class ImplicitEuler : public SSM
 {
 public:
@@ -149,3 +149,4 @@ public:
 
   }
 };
+*/
