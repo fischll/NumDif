@@ -109,3 +109,43 @@ public:
 };
 
 
+class ImplicitEuler : public SSM
+{
+public:
+  virtual void Step (double t, double h, const ODE_Function & func,
+                     const Vector<> & yold, Vector<> & ynew) const
+  {
+    Matrix<> DF(yold.Size());
+    Identity Id(yold.Size());
+    Matrix<> funcdfdy(yold.Size());
+    Matrix<> InvDF(yold.Size());
+
+    Vector<> f(yold.Size());
+    Vector<> update(yold.Size());
+
+    double err=1;
+    double epsilon = 1e-8;
+
+    ynew=yold;
+
+    int cnt=0;
+
+    while ((err > epsilon) && (cnt <20))
+      {
+ 	func.EvalDfDy(t+h,ynew,funcdfdy);
+      
+	DF = Id - h * funcdfdy;
+	CalcInverse(DF,InvDF);
+      
+	func.Eval(t+h,ynew,f);
+
+	update = InvDF * (ynew-yold-h*f);
+	
+	err = L2Norm(update);
+	
+	ynew -= update;
+	cnt++;
+      }
+
+  }
+};

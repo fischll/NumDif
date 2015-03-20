@@ -58,7 +58,7 @@ int main ()
 {
   ExplicitEuler expl_euler;
   ImprovedEuler impr_euler;
-  ClassicalRK RK_classical;
+  ImprovedEulerRK RK_impr_euler;
 
   ofstream out("data.out");
   My_First_ODE_Function func(1);
@@ -75,7 +75,7 @@ int main ()
   ODESolver (ms, impr_euler, 0, y0ms, 1000, 0.1, out2);
 
   ofstream out3("mass_spring_RK.out");
-  ODESolver(ms, RK_classical, 0, y0ms, 1000, 0.1, out3);
+  ODESolver(ms, RK_impr_euler, 0, y0ms, 1000, 0.1, out3);
 
   return 0;
 }

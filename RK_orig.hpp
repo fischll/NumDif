@@ -78,3 +78,22 @@ public:
     SetAbc (A, b, c);
   }
 };
+
+
+class ImprovedEulerRK : public ExplicitRKMethod
+{
+public:
+  ImprovedEulerRK() : ExplicitRKMethod (2)
+  {
+    Matrix<> A(2,2);
+    Vector<> b(2), c(2);
+
+    c = { 0, 0.5 };
+    b = { 0.0, 1.0 };
+
+    A = 0.0;
+    A(1,0) = 0.5;
+    
+    SetAbc (A, b, c);
+  }
+};
