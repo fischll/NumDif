@@ -1,11 +1,18 @@
 
-# The bla library will need the C++11 standard
 cmake_minimum_required(VERSION 3.1)
+project(ode)
+# The bla library will need the C++11 standard
 set(CMAKE_CXX_STANDARD 11)
+
+# set the install folder
+set(CMAKE_INSTALL_PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/install)
 
 # create our first 2 executables:
 add_executable(demo_bla demo_bla.cpp)
 add_executable(ode_demo ode_demo.cpp)
+
+# install them to the install folder (relative to CMAKE_INSTALL_PREFIX)
+install(TARGETS demo_bla ode_demo DESTINATION .)
 
 # add other folders such that they are built as well
 add_subdirectory(bla)
