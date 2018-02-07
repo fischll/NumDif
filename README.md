@@ -24,7 +24,7 @@ Start coding :)
 Windows
 -------
 
-Install [https://www.visualstudio.com/thank-you-downloading-visual-studio/?sku=Community&rel=15](Visual Studio Community Edition)
+Install [Visual Studio Community Edition](https://www.visualstudio.com/thank-you-downloading-visual-studio/?sku=Community&rel=15)
 
 While installing check the options for
 
