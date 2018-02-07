@@ -5,10 +5,23 @@ Installation instructions
 Ubuntu
 ------
 
-Create a build subdirectory (mkdir build) -> go there and call cmake with the parent dir as argument
-(where the main CMakeLists.txt is located)
+Install the needed dependencies:
+
+``` bash
+sudo apt install libglu1-mesa-dev python3 cmake git
+```
+Clone the git repository:
+
+``` bash
+git clone https://data.asc.tuwien.ac.at/jschoeberl/ode.git
+```
+Go to the folder and create a build subdirectory -> go there and call cmake with the
+parent dir as argument (where the main CMakeLists.txt is located)
 
 ```
+cd ode
+mkdir build
+cd build
 cmake ..
 ```
 
