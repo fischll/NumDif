@@ -1,0 +1,16 @@
+
+Installation instructions
+=========================
+
+Create a build subdirectory (mkdir build) -> go there and call cmake with the parent dir as argument
+(where the main CMakeLists.txt is located)
+
+cmake ..
+
+then call
+
+make -j
+
+to compile your code.
+
+Create your own files and add them to the CMakeLists.txt files.
