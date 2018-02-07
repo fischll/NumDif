@@ -12,7 +12,7 @@ add_executable(pendulum_DAE pendulum_DAE.cpp rattle.cpp)
 if(WIN32)
 target_include_directories(pendulum_DAE PUBLIC ../windows_GL/include)
 else(WIN32)
-target_include_directories(pendulum_DAE PUBLIC ${OPENGL_INCLUDE_DIRS} ${GLUT_INCLUDE_DIRS})
+target_include_directories(pendulum_DAE PUBLIC ${OPENGL_INCLUDE_DIRS} ${GLUT_INCLUDE_DIR} ${GLUT_INCLUDE_DIR}/GL)
 endif(WIN32)
 
 # link the glut libraries to our executable (again the variables are set by find_package)
@@ -20,7 +20,7 @@ if(WIN32)
 target_link_libraries(pendulum_DAE ${CMAKE_CURRENT_SOURCE_DIR}/../windows_GL/lib/freeglut.lib)
 install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/../windows_GL/bin/freeglut.dll DESTINATION .)
 else(WIN32)
-target_link_libraries(pendulum_DAE ${OPENGL_LIBRARIES} ${GLUT_LIBRARY})
+target_link_libraries(pendulum_DAE ${OPENGL_LIBRARIES} ${GLUT_LIBRARIES})
 endif(WIN32)
 
 # link to our blas

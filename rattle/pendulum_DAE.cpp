@@ -10,7 +10,7 @@ using namespace ngbla;
 #endif
 #include "rattle.hpp"
 
-#include <GL/glut.h>
+#include <glut.h>
 
 
 
