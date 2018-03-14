@@ -45,7 +45,7 @@ public:
 // the time integration loop
 void ODESolver (const ODE_Function & func, const SSM & ssm, 
 		double t0, Vector<> & y0, double tend, double h,
-		ostream & out)
+		ostream & out, size_t writeout_stepsize=1)
 {
   double t = t0;
   int n = y0.Size();
@@ -53,17 +53,20 @@ void ODESolver (const ODE_Function & func, const SSM & ssm,
   Vector<> yold(n), ynew(n);
 
   yold = y0;
+  size_t step = 0;
   while (t < tend)
     {
-      out << t;
-      for (int i = 0; i < n; i++)
-        out << " " << yold(i);
-      out << endl;
-
+      if (step%writeout_stepsize == 0)
+        {
+          out << t;
+          for (int i = 0; i < n; i++)
+            out << " " << yold(i);
+          out << "\n";
+        }
 
       ssm.Step (t, h, func, yold, ynew);
       yold = ynew;
-      t += h;
+      t += h; step++;
     }
 }
 
@@ -80,11 +83,12 @@ void ODESolver (const ODE_Function & func, const SSM & ssm,
 
 class ExplicitEuler : public SSM
 {
+  mutable Vector<> f;
 public:
   virtual void Step (double t, double h, const ODE_Function & func,
-                     const Vector<> & yold, Vector<> & ynew) const
+                     const Vector<> & yold, Vector<> & ynew) const override
   {
-    Vector<> f(yold.Size());
+    f.SetSize(yold.Size());
 
     func.Eval (t, yold, f);
     ynew = yold + h * f;
@@ -94,11 +98,12 @@ public:
 
 class ImprovedEuler : public SSM
 {
+  mutable Vector<> f;
 public:
   virtual void Step (double t, double h, const ODE_Function & func,
-                     const Vector<> & yold, Vector<> & ynew) const
+                     const Vector<> & yold, Vector<> & ynew) const override
   {
-    Vector<> f(yold.Size());
+    f.SetSize(yold.Size());
 
     func.Eval (t, yold, f);
     ynew = yold + h/2.0 * f;
