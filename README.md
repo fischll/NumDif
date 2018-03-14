@@ -8,7 +8,7 @@ Ubuntu
 Install the needed dependencies:
 
 ``` bash
-sudo apt install libglu1-mesa-dev python3 cmake git
+sudo apt install libglu1-mesa-dev python3 cmake git freeglut3-dev
 ```
 Clone the git repository:
 
