@@ -11,6 +11,10 @@ set(CMAKE_INSTALL_PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/install)
 add_executable(demo_bla demo_bla.cpp)
 add_executable(ode_demo ode_demo.cpp)
 
+add_executable(pendulum pendulum.cpp)
+
+target_link_libraries(pendulum mybla)
+
 # install them to the install folder (relative to CMAKE_INSTALL_PREFIX)
 install(TARGETS demo_bla ode_demo DESTINATION .)
 

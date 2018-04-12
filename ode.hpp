@@ -35,7 +35,7 @@ class SSM
 public:
   // do the step
   virtual void Step (double t, double h, const ODE_Function & func, 
-                     const Vector<> & yold, Vector<> & ynew) const = 0;
+                     const Vector<> & yold, Vector<> & ynew) = 0;
 };
 
 
@@ -43,10 +43,12 @@ public:
 
 
 // the time integration loop
-void ODESolver (const ODE_Function & func, const SSM & ssm, 
+void ODESolver (const ODE_Function & func, SSM & ssm,
 		double t0, Vector<> & y0, double tend, double h,
 		ostream & out, size_t writeout_stepsize=1)
 {
+  // to be able to write somthing like writeout_stepsize=1./h/10 and still work if h gets big
+  if (writeout_stepsize<1) writeout_stepsize=1;
   double t = t0;
   int n = y0.Size();
 
@@ -83,10 +85,10 @@ void ODESolver (const ODE_Function & func, const SSM & ssm,
 
 class ExplicitEuler : public SSM
 {
-  mutable Vector<> f;
+  Vector<> f;
 public:
   virtual void Step (double t, double h, const ODE_Function & func,
-                     const Vector<> & yold, Vector<> & ynew) const override
+                     const Vector<> & yold, Vector<> & ynew) override
   {
     f.SetSize(yold.Size());
 
@@ -98,10 +100,10 @@ public:
 
 class ImprovedEuler : public SSM
 {
-  mutable Vector<> f;
+  Vector<> f;
 public:
   virtual void Step (double t, double h, const ODE_Function & func,
-                     const Vector<> & yold, Vector<> & ynew) const override
+                     const Vector<> & yold, Vector<> & ynew) override
   {
     f.SetSize(yold.Size());
 
@@ -113,20 +115,23 @@ public:
   }
 };
 
-/*
+
 class ImplicitEuler : public SSM
 {
+  Matrix<> DF, funcdfdy, InvDF;
+  Vector<> f, update;
+
 public:
   virtual void Step (double t, double h, const ODE_Function & func,
-                     const Vector<> & yold, Vector<> & ynew) const
+                     const Vector<> & yold, Vector<> & ynew) override
   {
-    Matrix<> DF(yold.Size());
-    Identity Id(yold.Size());
-    Matrix<> funcdfdy(yold.Size());
-    Matrix<> InvDF(yold.Size());
-
-    Vector<> f(yold.Size());
-    Vector<> update(yold.Size());
+    auto n = yold.Size();
+    DF.SetSize(n);
+    funcdfdy.SetSize(n);
+    InvDF.SetSize(n);
+    f.SetSize(n);
+    update.SetSize(n);
+    Identity Id(n);
 
     double err=1;
     double epsilon = 1e-8;
@@ -154,4 +159,4 @@ public:
 
   }
 };
-*/
+
