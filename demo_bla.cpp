@@ -28,6 +28,7 @@ int main ()
 
   cout << "u = " << endl << u << endl;
   cout << "v = " << endl << v << endl;
+  cout << "v.range(1,3) = " << endl << v.Range(1, 3) << endl;
   cout << "m = " << endl << m << endl;
 
   // use result directly
@@ -129,7 +130,7 @@ int main ()
     sumc += InnerProduct (ac, bc);
 
   cout << "sum = " << sumc << endl;
-  
+  //cout << "n! = " << math.<< endl;
   return 0;
 }
 

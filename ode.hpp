@@ -1,4 +1,4 @@
-// a simple ODE - solver library
+ // a simple ODE - solver library
 // Joachim Schoeberl
 
 
@@ -25,6 +25,7 @@ public:
 	dfdy.Col(i) = 1.0/(2*eps) * (fr - fl);
       }
   }
+  
 };
 
 
@@ -66,20 +67,14 @@ void ODESolver (const ODE_Function & func, const SSM & ssm,
 
       ssm.Step (t, h, func, yold, ynew);
       yold = ynew;
-      t += h; step++;
+      t += h; 
+	  step++;
     }
 }
 
 
 
-
-
-
-
-
 /* *************** Here are the specific single-step methods *************** */
-
-
 
 class ExplicitEuler : public SSM
 {
@@ -113,12 +108,12 @@ public:
   }
 };
 
-/*
+// von Lorenz eingeblendet
 class ImplicitEuler : public SSM
 {
 public:
   virtual void Step (double t, double h, const ODE_Function & func,
-                     const Vector<> & yold, Vector<> & ynew) const
+                     const Vector<> & yold, Vector<> & ynew) const override
   {
     Matrix<> DF(yold.Size());
     Identity Id(yold.Size());
@@ -137,7 +132,7 @@ public:
 
     while ((err > epsilon) && (cnt <20))
       {
- 	func.EvalDfDy(t+h,ynew,funcdfdy);
+ 	func.EvalDfDy(t,ynew,funcdfdy);
       
 	DF = Id - h * funcdfdy;
 	CalcInverse(DF,InvDF);
@@ -154,4 +149,3 @@ public:
 
   }
 };
-*/
