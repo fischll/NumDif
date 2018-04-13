@@ -28,6 +28,10 @@ add_executable(DifUe DifUe.cpp)
 target_link_libraries(test_12 mybla)
 target_link_libraries(DifUe mybla)
 
+add_executable(pendulum pendulum.cpp)
+
+target_link_libraries(pendulum mybla)
+
 # install them to the install folder (relative to CMAKE_INSTALL_PREFIX)
 install(TARGETS DifUe test_12 DESTINATION .)
 
