@@ -23,10 +23,7 @@ public:
 		}
 	}
 };
-
-
-
-class Newton 
+class Newton
 {
 public:
 	void newton(Vector<> & zold, Vector<> & znew, const MyFunction & func, double eps = 10e-8, int maxcnt = 20)
@@ -38,7 +35,7 @@ public:
 		Vector<> f(zold.Size());
 		Vector<> update(zold.Size());
 		int cnt = 0;
-		double err=eps+1;
+		double err = eps + 1;
 
 		while ((err > eps) && (cnt < maxcnt))
 		{
@@ -55,36 +52,111 @@ public:
 	}
 };
 
-
 class RungeKuttaMethod : public SSM
 {
 protected:
-  int stages;
-  Matrix<> A;
-  Vector<> b,c;
+	int stages;
+	Matrix<> A;
+	Vector<> b, c;
 public:
-  RungeKuttaMethod (int s)
-    : stages(s), A(s,s), b(s), c(s) 
-  { ; }
- 
-  void SetAbc (const Matrix<> & aa,
-	       const Vector<> & ab,
-	       const Vector<> & ac)
-  {
-    A = aa;
-    b = ab;
-    c = ac;
-  }
+	RungeKuttaMethod(int s)
+		: stages(s), A(s, s), b(s), c(s)
+	{
+		;
+	}
+
+	void SetAbc(const Matrix<> & aa,
+		const Vector<> & ab,
+		const Vector<> & ac)
+	{
+		A = aa;
+		b = ab;
+		c = ac;
+	}
+};
+
+//=======================adaptiveSteps==================
+
+class AdaptiveRKMethod : public RungeKuttaMethod
+{
+protected:
+	double epsilon;
+	double hmin = 1e-6;
+	double hmax = 1;
+	double alpha_min = 1.5; //2
+	double alpha_max = 0.5; //0.2
+	double beta = 0.925; //\in [0.9, 0.95]
+	SSM & base_methode; //==========Vielleicht geht das nicht so
+	SSM & estimate_methode;
+public:
+	void setAdaptiveMethod(double mepsilon, double mhmin, double mhmax, double malpha_min, double malpha_max, double mbeta,
+		SSM & mbase_methode, SSM & mestimate_methode)
+	{
+		epsilon = mepsilon;
+		hmin = mhmin; 
+		hmax = mhmax;
+		alpha_min = malpha_min;
+		alpha_max = malpha_max;
+		beta = mbeta;
+		base_methode = mbase_methode;
+		estimate_methode = mestimate_methode;
+	}
+	virtual void StepAdaptive(double t, double hold, double hnew, const ODE_Function & func, const Vector<> & yold, const Vector<> & ynew) 
+	{
+		Vector<> ydach(yold.Size());
+		double sh = 0;
+		double qh = 0;
+		double tmp = 0;
+		double alpha = 0;
+		hnew = hold;
+		do
+		{
+			hold = hnew;
+			mbase_methode.Step(t, hold, func, yold, ynew);
+			estimate_methode.Step(t, hold, func, yold, ydach);
+			sh = Norm(ynew - ydach);
+			qh = sh / epsilon / hold;
+
+			if (alpha_min > pow(qh, -1. / mbase_methode.Order()))
+				alpha = alpha_min;
+			else
+			{
+				if (alpha_max < pow(qh, -1. / mbase_methode.Order()))
+					alpha = alpha_max;
+				else
+					alpha = pow(qh, -1. / mbase_methode.Order());
+			}
+
+
+			if (hmin > beta*alpha*hold)
+				hnew = hmin;
+			else
+			{
+				if (hmax < beta*alpha*hold)
+					hnew = hmax;
+				else
+					hnew = beta * alpha*hold;
+			}
+		} while(qh > 1 && hnew > hmin) //ein until nachgebaut mit hilfe unseres guten alten freundes DEMORGAN
+
+	}
 };
 
 
 
+
+
+
+
+
+
+//============================implicitRKMethod===========================
 class ImplicitRKMethod : public RungeKuttaMethod
 {
 public:
 	ImplicitRKMethod(int as) : RungeKuttaMethod(as) { ; }
 
-	virtual void Step(double t, double h, const ODE_Function & func, const Vector<> & yold, Vector<> & ynew) const
+	virtual bool Step(double t, double h, const ODE_Function & func, const Vector<> & yold, Vector<> & ynew) override
 	{
 		int n = yold.Size(); //f: R^n -> R^n
 		double eps = 1e-8;
@@ -103,7 +175,7 @@ public:
 		Matrix<> InvDF(stages*n);
 		Identity Id(stages*n);
 		Vector<> update(stages*n);
-		
+
 		for (int i = 0; i < stages; i++) // Quadraturknoten, Startwerte
 		{
 			time(i) = t + c(i)*h;
@@ -120,14 +192,14 @@ public:
 				for (int l = 0; l < stages; l++)
 					y.Range(i*n, (i + 1)*n) += h * A(i, l) * k.Range(l*n, (l + 1)*n);
 			}
-		
+
 			for (int i = 0; i < stages; i++) // f(time(i),y(i)) auswerten
 			{
 				func.Eval(time(i), y.Range(i*n, (i + 1)*n), fi);
 				f.Range(i*n, (i + 1)*n) = fi;
 			}
 
-			for(int i=0; i<stages; i++) // F erstellen
+			for (int i = 0; i<stages; i++) // F erstellen
 				F.Range(i*n, (i + 1)*n) = k.Range(i*n, (i + 1)*n) - f.Range(i*n, (i + 1)*n);
 
 			DF = Id;
@@ -135,8 +207,8 @@ public:
 			{
 				func.EvalDfDy(time(i), y.Range(i*n, (i + 1)*n), dfdy);
 				for (int m = 0; m < stages; m++)
-					for (int e1=0; e1 < n; e1++) //navigieren in der kleinen Blockmatrix (e1,e2)
-						for (int e2=0; e2 < n; e2++)
+					for (int e1 = 0; e1 < n; e1++) //navigieren in der kleinen Blockmatrix (e1,e2)
+						for (int e2 = 0; e2 < n; e2++)
 							DF(i*n + e1, m*n + e2) -= A(i, m) * h * dfdy(e1, e2);
 			}
 
@@ -147,13 +219,13 @@ public:
 			k += update;
 			cnt++;
 		}
-		
+
 		ynew = yold;
 		for (int i = 0; i < stages; i++)
 			ynew += h * b(i) * k.Range(i*n, (i + 1)*n);
+		return true;
 	}
 };
-
 class ImplMP : public ImplicitRKMethod
 {
 public:
@@ -170,8 +242,8 @@ public:
 
 		SetAbc(A, b, c);
 	}
+	virtual int Order() override { return 1; }
 };
-
 class Gauss2 : public ImplicitRKMethod
 {
 public:
@@ -180,18 +252,19 @@ public:
 		Matrix<> A(2, 2);
 		Vector<> b(2), c(2);
 
-		c = { (1./2)-sqrt(3) / 6, (1./2) + sqrt(3) / 6 };
+		c = { (1. / 2) - sqrt(3) / 6, (1. / 2) + sqrt(3) / 6 };
 
-		b = { 1./2, 1./2 };
+		b = { 1. / 2, 1. / 2 };
 
-		A = 1./4;
+		A = 1. / 4;
 		A(0, 1) -= sqrt(3) / 6;
 		A(1, 0) += sqrt(3) / 6;
 
 		SetAbc(A, b, c);
 	}
-};
 
+	virtual int Order() override { return 3; }
+};
 class ImplEV_RK : public ImplicitRKMethod
 {
 public:
@@ -208,157 +281,79 @@ public:
 
 		SetAbc(A, b, c);
 	}
+	virtual int Order() override{ return 1; }
 };
 
 
 
-
-
-
-
+//============================explicitRKMethod===========================
 class ExplicitRKMethod : public RungeKuttaMethod
 {
-  Vector<> yi, ki, all_ki;
+	Vector<> yi, ki, all_ki;
 public:
-  ExplicitRKMethod (int as) : RungeKuttaMethod (as){ ; }
+	ExplicitRKMethod(int as) : RungeKuttaMethod(as) { ; }
 
-  
-  virtual void Step (double t, double h, const ODE_Function & func,
-                     const Vector<> & yold, Vector<> & ynew) override
-  {
-    int n = yold.Size();
-    yi.SetSize(n);
-    ki.SetSize(n);
-    all_ki.SetSize(stages*n);
 
-    for (int i = 0; i < stages; i++)
-      {
-		double ti = t + h * c(i);
-		yi = yold;
-		for (int j = 0; j < i; j++)
-			yi += h * A(i,j) * all_ki.Range (j*n, (j+1)*n);
+	virtual bool Step(double t, double h, const ODE_Function & func,
+		const Vector<> & yold, Vector<> & ynew) override
+	{
+		int n = yold.Size();
+		yi.SetSize(n);
+		ki.SetSize(n);
+		all_ki.SetSize(stages*n);
 
-		func.Eval (ti, yi, ki);
-		all_ki.Range(i*n, (i+1)*n) = ki;
+		for (int i = 0; i < stages; i++)
+		{
+			double ti = t + h * c(i);
+			yi = yold;
+			for (int j = 0; j < i; j++)
+				yi += h * A(i, j) * all_ki.Range(j*n, (j + 1)*n);
+
+			func.Eval(ti, yi, ki);
+			all_ki.Range(i*n, (i + 1)*n) = ki;
+		}
+
+
+		ynew = yold;
+		for (int i = 0; i < stages; i++)
+			ynew += h * b(i) * all_ki.Range(i*n, (i + 1)*n);
+
+		return true;
 	}
-
-
-	 ynew = yold;
-	 for (int i = 0; i < stages; i++)
-		ynew += h * b(i) * all_ki.Range (i*n, (i+1)*n);
-  }
-};
-
-class ImplicitRKMethod : public RungeKuttaMethod
-{
-private:
-  Vector<> yi, farg, update, F, yi_old, fi;
-  Matrix<> dF, tmpmat, InvDF;
-  double epsilon = 1e-8;
-public:
-  ImplicitRKMethod (size_t as) : RungeKuttaMethod(as) { ; }
-
-  virtual void Step(double t, double h, const ODE_Function& func,
-                    const Vector<>& yold, Vector<>& ynew) override
-  {
-    size_t n = yold.Size();
-    yi.SetSize(n*stages);
-    farg.SetSize(n);
-    update.SetSize(n*stages);
-    F.SetSize(n * stages);
-    fi.SetSize(n);
-    dF.SetSize(n*stages);
-    tmpmat.SetSize(n);
-    InvDF.SetSize(n*stages);
-
-    for (auto i : Range(stages))
-      {
-        yi.Range(i*n,(i+1)*n) = yold;
-      }
-    double err = 1.;
-    int cnt = 0;
-
-    while((err > epsilon) && (cnt < 20))
-      {
-        F = yi;
-        dF = Identity(n*stages);
-        for (auto i : Range(stages))
-          {
-            // F
-            farg = yold;
-            for (auto j : Range(stages))
-              farg += h * A(i,j) * yi.Range(j*n,(j+1)*n);
-            func.Eval(t + c(i)*h,farg,fi);
-            F.Range(i*n,(i+1)*n) -= fi;
-            // DF
-            func.EvalDfDy(t+c(i)*h, farg, tmpmat);
-            for (auto j : Range(stages))
-              dF.Rows(i*n,(i+1)*n).Cols(j*n,(j+1)*n) -= h * A(i,j) * tmpmat;
-          }
-        CalcInverse(dF,InvDF);
-        update = InvDF * F;
-        err = L2Norm(update);
-        cnt++;
-        yi -= update;
-      }
-    if(cnt == 20)
-      throw Exception("Newton didn't converge!");
-    ynew = yold;
-    for (auto i : Range(stages))
-      ynew += h * b[i] * yi.Range(i*n,(i+1)*n);
-  }
-};
-
-class ImplicitMP : public ImplicitRKMethod
-{
-public:
-  ImplicitMP() : ImplicitRKMethod(1)
-  {
-    c = {0.5};
-    b = {1.};
-    A(0,0) = 0.5;
-  }
-};
-
-class Gauss2 : public ImplicitRKMethod
-{
-public:
-  Gauss2() : ImplicitRKMethod(2)
-  {
-    c = { 0.5 - sqrt(3.)/6., 0.5 + sqrt(3.)/6.};
-    b = {0.5, 0.5};
-    A = {{1./4, 1./4-sqrt(3.)/6},{1./4 + sqrt(3.)/6, 1./4}};
-  }
 };
 
 
 class Classical_expl_RK : public ExplicitRKMethod
 {
 public:
-  Classical_expl_RK() : ExplicitRKMethod (4)
-  {
-    c = { 0, 0.5, 0.5, 1 };
-    b = { 1.0 / 6, 2.0 / 6, 2.0 / 6, 1.0 / 6 };
+	Classical_expl_RK() : ExplicitRKMethod(4)
+	{
+		c = { 0, 0.5, 0.5, 1 };
+		b = { 1.0 / 6, 2.0 / 6, 2.0 / 6, 1.0 / 6 };
 
-    A = 0.0;
-    A(1,0) = 0.5;
-    A(2,1) = 0.5;    
-    A(3,2) = 1;
-  }
+		A = 0.0;
+		A(1, 0) = 0.5;
+		A(2, 1) = 0.5;
+		A(3, 2) = 1;
+		SetAbc(A, b, c);
+	}
+	virtual int Order() override { return 4; }//bin mir nicht sicher
 };
 
 
 class ImprovedEulerRK : public ExplicitRKMethod
 {
 public:
-  ImprovedEulerRK() : ExplicitRKMethod (2)
-  {
-    c = { 0, 0.5 };
-    b = { 0.0, 1.0 };
+	ImprovedEulerRK() : ExplicitRKMethod(2)
+	{
+		c = { 0, 0.5 };
+		b = { 0.0, 1.0 };
 
-    A = 0.0;
-    A(1,0) = 0.5;
-    
-  }
+		A = 0.0;
+		A(1, 0) = 0.5;
+		SetAbc(A, b, c);
+	}
+	virtual int Order() override { return 2; }
 };
+
 
