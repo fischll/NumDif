@@ -31,14 +31,15 @@ int main()
 {
 	Gauss2 gauss2;
 	ImplMP implMP;
-	double hmin = 1e-6;
+
+	double hmin = 1e-10;
 	double hmax = 1e-2;
 	double alpha_min = 0.35;
 	double alpha_max = 1.75;
 	double beta = 0.925;
 	double t0 = 0;
 	double tend =  200;
-	double epsilon = 1e-5;
+	double epsilon = 1e-7;
 	int writeout_stepsize = 1;
 
 
@@ -48,6 +49,5 @@ int main()
 	ChemicalReactions_ODE_Function oregano(k);
 
 	ODESolverAdaptive(oregano, implMP, gauss2, t0, y0, tend, out, epsilon, hmin, hmax, alpha_min, alpha_max, beta, writeout_stepsize);
-	
 	return 0;
 }

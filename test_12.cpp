@@ -23,15 +23,16 @@ public:
 
 int main()
 {
-	ImplMP impl_MP;
+	Bsp16 imprEV;
 	Gauss2 gauss2;
 
-	double h = 0.01;
+	cout << 0 << endl << 0. << endl << 0.0 << 1. / 2 << endl;
+	double h = 0.001;
 	double t0 = 0.;
-	double T = 1000;
+	double T = 10;
 	int stepsave = 1;
 
-	ofstream out_implMP("Pen_implMP.out");
+	ofstream out_implMP("Pen_imprEV.out");
 	ofstream out_gauss2("Pen_gauss2.out");
 
 	Pendulum_ODE_Function pen(1, 1);
@@ -39,7 +40,7 @@ int main()
 	y0(0) = M_PI / 2; //das ist ja nur ein startwert und pi ging nicht
 	y0(1) = 0;
 
-	ODESolver(pen,  impl_MP, t0, y0, T, h, out_implMP, stepsave);
+	ODESolver(pen,  imprEV, t0, y0, T, h, out_implMP, stepsave);
 	ODESolver(pen, gauss2, t0, y0, T, h, out_gauss2, stepsave);
 
 	return 0;

@@ -75,77 +75,6 @@ public:
 	}
 };
 
-/*
-//=======================adaptiveSteps==================
-
-class AdaptiveRKMethod : public RungeKuttaMethod
-{
-protected:
-double epsilon;
-double hmin = 1e-6;
-double hmax = 1;
-double alpha_min = 1.5; //\in [1.5,1.8]
-double alpha_max = 0.5; //\in [0.2, 0.5]
-double beta = 0.925; //\in [0.9, 0.95]
-SSM & base_methode; //==========Vielleicht geht das nicht so
-SSM & estimate_methode;
-public:
-void setAdaptiveMethod(double mepsilon, double mhmin, double mhmax, double malpha_min, double malpha_max, double mbeta,
-SSM & mbase_methode, SSM & mestimate_methode)
-{
-epsilon = mepsilon;
-hmin = mhmin;
-hmax = mhmax;
-alpha_min = malpha_min;
-alpha_max = malpha_max;
-beta = mbeta;
-base_methode = mbase_methode;
-estimate_methode = mestimate_methode;
-}
-virtual void StepAdaptive(double t, double hold, double hnew, const ODE_Function & func, const Vector<> & yold, Vector<> & ynew)
-{
-Vector<> ydach(yold.Size());
-double sh = 0;
-double qh = 0;
-double tmp = 0;
-double alpha = 0;
-hnew = hold;
-do
-{
-hold = hnew;
-base_methode.Step(t, hold, func, yold, ynew);
-estimate_methode.Step(t, hold, func, yold, ydach);
-sh = sqrt(InnerProduct(ynew - ydach, ynew - ydach));
-qh = sh / epsilon / hold;
-
-if (alpha_min > pow(qh, -1. / base_methode.Order()))
-alpha = alpha_min;
-else
-{
-if (alpha_max < pow(qh, -1. / base_methode.Order()))
-alpha = alpha_max;
-else
-alpha = pow(qh, -1. / base_methode.Order());
-}
-
-
-if (hmin > beta*alpha*hold)
-hnew = hmin;
-else
-{
-if (hmax < beta*alpha*hold)
-hnew = hmax;
-else
-hnew = beta * alpha*hold;
-}
-} while(qh > 1 && hnew > hmin) //ein until nachgebaut mit hilfe unseres guten alten freundes DEMORGAN
-
-}
-};
-*/
-
-
-
 
 //============================implicitRKMethod===========================
 class ImplicitRKMethod : public RungeKuttaMethod
@@ -222,7 +151,10 @@ public:
 		ynew = yold;
 		for (int i = 0; i < stages; i++)
 			ynew += h * b(i) * k.Range(i*n, (i + 1)*n);
-		return true;
+		if (cnt == maxcnt)
+			return false;
+		else
+			return true;
 	}
 };
 class ImplMP : public ImplicitRKMethod
@@ -356,3 +288,35 @@ public:
 };
 
 
+class Heun_RK : public ExplicitRKMethod
+{
+public:
+	Heun_RK() : ExplicitRKMethod(3)
+	{
+		c = {0., 1. / 3, 2. / 3 };
+		b = { 1. / 4, 0., 3. / 4 };
+
+		A = 0.0;
+		A(1,0) = 1. / 3;
+		A(2,1) = 2. / 3;
+		SetAbc(A, b, c);
+	}
+	virtual int Order() override { return 3; }
+};
+
+class Bsp16 : public ImplicitRKMethod
+{
+public:
+	Bsp16() : ImplicitRKMethod(2)
+	{
+		c = { 1. / 3, 1.};
+		b = { 3./4, 1. / 4 };
+
+		A(0,0) = 5. / 12;
+		A(0,1) = -1. / 12;
+		A(1,0) = 3. / 4;
+		A(1,1) = 1. / 4;
+		SetAbc(A, b, c);
+	}
+	virtual int Order() override { return 3; }
+};

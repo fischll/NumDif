@@ -1,6 +1,7 @@
 // a simple ODE - solver library
 // Joachim Schoeberl
 // the base class for the right-hand-side f(t,y)
+
 class ODE_Function
 {
 public:
@@ -40,8 +41,6 @@ void ODESolver(const ODE_Function & func, SSM & ssm,
 	double t0, Vector<> & y0, double tend, double h,
 	ostream & out, size_t writeout_stepsize = 1)
 {
-	// to be able to write somthing like writeout_stepsize=1./h/10 and still work if h gets big
-	if (writeout_stepsize<1) writeout_stepsize = 1;
 	double t = t0;
 	int n = y0.Size();
 	Vector<> yold(n), ynew(n);
@@ -62,19 +61,18 @@ void ODESolver(const ODE_Function & func, SSM & ssm,
 	}
 }
 
-
+//time integration loop with adaptive step size
 void ODESolverAdaptive(const ODE_Function & func, SSM & base_methode, SSM & estimate_methode, double t0, Vector<> & y0, double tend,
 	ostream & out, double epsilon, double hmin = 1e-6, double hmax = 1, double alpha_min = 0.5, double alpha_max = 1.5, double beta = 0.925, size_t writeout_stepsize = 1) 
 	/*rechte seite funktion*//*Methode mit niedriger KO*/ /*Methode mit höherer KO*/ /*Startwert Zeit*/ /*Startwert Ort*/ /*Datei zum rausschreiben*/
 	/*genauigkeit die man sich wünscht... insgesammt (T-t0)*epsilon*/ /*min Schrittweite*/ /*max Schrittweite*/ /*alpha_min*/ /*alpha_max*/ /*beta*/
 {
-	//if (writeout_stepsize<1) writeout_stepsize = 1;
 	int n = y0.Size();
-	Vector<> yold(n), ynew(n);
-	Vector<> ydach(n);
+	Vector<> yold(n), ynew(n), ydach(n);
 	yold = y0;
 	size_t step = 0;
-	double sh=0, hold=hmin, hnew=hmin, qh=0, alpha=0, t=t0, h=hmin;
+	double sh=0, hold=hmin, hnew=hmin, qh=0, alpha=0, t=t0;
+	bool step_ok;
 
 	while (t < tend)
 	{
@@ -89,8 +87,22 @@ void ODESolverAdaptive(const ODE_Function & func, SSM & base_methode, SSM & esti
 
 		do{
 			hold = hnew;
-			base_methode.Step(t, hold, func, yold, ynew);
-			estimate_methode.Step(t, hold, func, yold, ydach);
+			step_ok = base_methode.Step(t, hold, func, yold, ynew);
+			if (!step_ok) // ! ist die Negation einer boolean Variable
+			{
+				hnew = hold / 2;
+				if (hnew < hmin)
+					cout << "Newton convergiert auch mit minimaler Schrittweite nicht." << endl;
+				continue;
+			}			
+			step_ok = estimate_methode.Step(t, hold, func, yold, ydach);
+			if (!step_ok) // ! ist die Negation einer boolean Variable
+			{
+				hnew = hold / 2;
+				if (hnew < hmin)
+					cout << "Newton convergiert auch mit minimaler Schrittweite nicht." << endl;
+				continue;
+			}
 			sh = sqrt(InnerProduct(ynew - ydach, ynew - ydach)); //Norm
 			qh = sh / epsilon / hold;
 
@@ -103,7 +115,6 @@ void ODESolverAdaptive(const ODE_Function & func, SSM & base_methode, SSM & esti
 				else
 					alpha = pow(qh, -1. / base_methode.Order());
 			}
-
 
 			if (hmin > beta*alpha*hold)
 				hnew = hmin;
@@ -119,76 +130,6 @@ void ODESolverAdaptive(const ODE_Function & func, SSM & base_methode, SSM & esti
 		yold = ynew;
 	}
 }
-
-
-//=======================adaptiveSteps==================
-/*
-class AdaptiveRKMethod : public RungeKuttaMethod
-{
-protected:
-	double epsilon;
-	double hmin = 1e-6;
-	double hmax = 1;
-	double alpha_min = 1.5; //\in [1.5,1.8]
-	double alpha_max = 0.5; //\in [0.2, 0.5]
-	double beta = 0.925; //\in [0.9, 0.95]
-	SSM & base_methode; //==========Vielleicht geht das nicht so
-	SSM & estimate_methode;
-public:
-	void setAdaptiveMethod(double mepsilon, double mhmin, double mhmax, double malpha_min, double malpha_max, double mbeta,
-		SSM & mbase_methode, SSM & mestimate_methode)
-	{
-		epsilon = mepsilon;
-		hmin = mhmin;
-		hmax = mhmax;
-		alpha_min = malpha_min;
-		alpha_max = malpha_max;
-		beta = mbeta;
-		base_methode = mbase_methode;
-		estimate_methode = mestimate_methode;
-	}
-	virtual void StepAdaptive(double t, double hold, double hnew, const ODE_Function & func, const Vector<> & yold, Vector<> & ynew)
-	{
-		Vector<> ydach(yold.Size());
-		double sh = 0;
-		double qh = 0;
-		double alpha = 0;
-		hnew = hold;
-		do
-		{
-			hold = hnew;
-			base_methode.Step(t, hold, func, yold, ynew);
-			estimate_methode.Step(t, hold, func, yold, ydach);
-			sh = sqrt(InnerProduct(ynew - ydach, ynew - ydach));
-			qh = sh / epsilon / hold;
-
-			if (alpha_min > pow(qh, -1. / base_methode.Order()))
-				alpha = alpha_min;
-			else
-			{
-				if (alpha_max < pow(qh, -1. / base_methode.Order()))
-					alpha = alpha_max;
-				else
-					alpha = pow(qh, -1. / base_methode.Order());
-			}
-
-
-			if (hmin > beta*alpha*hold)
-				hnew = hmin;
-			else
-			{
-				if (hmax < beta*alpha*hold)
-					hnew = hmax;
-				else
-					hnew = beta * alpha*hold;
-			}
-		} while (qh > 1 && hnew > hmin); //ein until nachgebaut mit hilfe unseres guten alten freundes DEMORGAN
-
-	}
-};
-*/
-
-
 
 
 

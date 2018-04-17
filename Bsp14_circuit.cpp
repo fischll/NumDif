@@ -34,6 +34,8 @@ int main()
 	ImplicitEuler impl_euler;
 	ExplicitEuler expl_euler;
 	ImplMP impl_MP;
+	Bsp16 bsp16;
+
 	Vector<> c = { 0.001,0.001 };
 	Vector<> r = { 1000,1 };
 	double omega = 1;
@@ -46,6 +48,9 @@ int main()
 	ofstream out_expl_EV("circuit_expl_EV.out");
 	ofstream out_impl_EV("circuit_impl_EV.out");
 
+	ofstream out_bsp16("circuit_bsp16.out");
+	
+
 	Circuid_ODE_Function circuit(c, r, omega);
 	Vector<> y0(2);
 	y0(0) = -1;
@@ -54,5 +59,6 @@ int main()
 	ODESolver(circuit, impl_euler, t0, y0, T, h, out_impl_EV, stepsave);
 	ODESolver(circuit, expl_euler, t0, y0, T, h, out_expl_EV, stepsave);
 	ODESolver(circuit, impl_MP, t0, y0, T, h, out_impl_MP, stepsave);
+	ODESolver(circuit, bsp16, t0, y0, T, h, out_bsp16, stepsave);
 	return 0;
 }
