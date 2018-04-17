@@ -10,30 +10,25 @@ set(CMAKE_INSTALL_PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/install)
 # create our first 2 executables:
 #add_executable(demo_bla demo_bla.cpp)
 #add_executable(ode_demo ode_demo.cpp)
-#add_executable(pendulum pendulum.cpp)
+add_executable(pendulum pendulum.cpp)
 #add_executable(circuit circuit.cpp)
 #add_executable(testImplRK test_impl_RK.cpp)
 #add_executable(testNewton test_Newton.cpp)
 #add_executable(diode diode.cpp)
 #add_executable(circuit_14 Bsp14_circuit.cpp)
 add_executable(test_12 test_12.cpp)
-add_executable(DifUe DifUe.cpp)
 
-#target_link_libraries(pendulum mybla)
+target_link_libraries(pendulum mybla)
 #target_link_libraries(circuit mybla)
 #target_link_libraries(testImplRK mybla)
 #target_link_libraries(testNewton mybla)
 #target_link_libraries(diode mybla)
 #target_link_libraries(circuit_14 mybla)
 target_link_libraries(test_12 mybla)
-target_link_libraries(DifUe mybla)
 
-add_executable(pendulum pendulum.cpp)
-
-target_link_libraries(pendulum mybla)
 
 # install them to the install folder (relative to CMAKE_INSTALL_PREFIX)
-install(TARGETS DifUe test_12 DESTINATION .)
+install(TARGETS pendulum test_12 DESTINATION .)
 
 # add other folders such that they are built as well
 add_subdirectory(bla)
