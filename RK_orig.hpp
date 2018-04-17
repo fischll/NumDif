@@ -75,77 +75,74 @@ public:
 	}
 };
 
+/*
 //=======================adaptiveSteps==================
 
 class AdaptiveRKMethod : public RungeKuttaMethod
 {
 protected:
-	double epsilon;
-	double hmin = 1e-6;
-	double hmax = 1;
-	double alpha_min = 1.5; //2
-	double alpha_max = 0.5; //0.2
-	double beta = 0.925; //\in [0.9, 0.95]
-	SSM & base_methode; //==========Vielleicht geht das nicht so
-	SSM & estimate_methode;
+double epsilon;
+double hmin = 1e-6;
+double hmax = 1;
+double alpha_min = 1.5; //\in [1.5,1.8]
+double alpha_max = 0.5; //\in [0.2, 0.5]
+double beta = 0.925; //\in [0.9, 0.95]
+SSM & base_methode; //==========Vielleicht geht das nicht so
+SSM & estimate_methode;
 public:
-	void setAdaptiveMethod(double mepsilon, double mhmin, double mhmax, double malpha_min, double malpha_max, double mbeta,
-		SSM & mbase_methode, SSM & mestimate_methode)
-	{
-		epsilon = mepsilon;
-		hmin = mhmin; 
-		hmax = mhmax;
-		alpha_min = malpha_min;
-		alpha_max = malpha_max;
-		beta = mbeta;
-		base_methode = mbase_methode;
-		estimate_methode = mestimate_methode;
-	}
-	virtual void StepAdaptive(double t, double hold, double hnew, const ODE_Function & func, const Vector<> & yold, const Vector<> & ynew) 
-	{
-		Vector<> ydach(yold.Size());
-		double sh = 0;
-		double qh = 0;
-		double tmp = 0;
-		double alpha = 0;
-		hnew = hold;
-		do
-		{
-			hold = hnew;
-			mbase_methode.Step(t, hold, func, yold, ynew);
-			estimate_methode.Step(t, hold, func, yold, ydach);
-			sh = Norm(ynew - ydach);
-			qh = sh / epsilon / hold;
+void setAdaptiveMethod(double mepsilon, double mhmin, double mhmax, double malpha_min, double malpha_max, double mbeta,
+SSM & mbase_methode, SSM & mestimate_methode)
+{
+epsilon = mepsilon;
+hmin = mhmin;
+hmax = mhmax;
+alpha_min = malpha_min;
+alpha_max = malpha_max;
+beta = mbeta;
+base_methode = mbase_methode;
+estimate_methode = mestimate_methode;
+}
+virtual void StepAdaptive(double t, double hold, double hnew, const ODE_Function & func, const Vector<> & yold, Vector<> & ynew)
+{
+Vector<> ydach(yold.Size());
+double sh = 0;
+double qh = 0;
+double tmp = 0;
+double alpha = 0;
+hnew = hold;
+do
+{
+hold = hnew;
+base_methode.Step(t, hold, func, yold, ynew);
+estimate_methode.Step(t, hold, func, yold, ydach);
+sh = sqrt(InnerProduct(ynew - ydach, ynew - ydach));
+qh = sh / epsilon / hold;
 
-			if (alpha_min > pow(qh, -1. / mbase_methode.Order()))
-				alpha = alpha_min;
-			else
-			{
-				if (alpha_max < pow(qh, -1. / mbase_methode.Order()))
-					alpha = alpha_max;
-				else
-					alpha = pow(qh, -1. / mbase_methode.Order());
-			}
+if (alpha_min > pow(qh, -1. / base_methode.Order()))
+alpha = alpha_min;
+else
+{
+if (alpha_max < pow(qh, -1. / base_methode.Order()))
+alpha = alpha_max;
+else
+alpha = pow(qh, -1. / base_methode.Order());
+}
 
 
-			if (hmin > beta*alpha*hold)
-				hnew = hmin;
-			else
-			{
-				if (hmax < beta*alpha*hold)
-					hnew = hmax;
-				else
-					hnew = beta * alpha*hold;
-			}
-		} while(qh > 1 && hnew > hmin) //ein until nachgebaut mit hilfe unseres guten alten freundes DEMORGAN
+if (hmin > beta*alpha*hold)
+hnew = hmin;
+else
+{
+if (hmax < beta*alpha*hold)
+hnew = hmax;
+else
+hnew = beta * alpha*hold;
+}
+} while(qh > 1 && hnew > hmin) //ein until nachgebaut mit hilfe unseres guten alten freundes DEMORGAN
 
-	}
+}
 };
-
-
-
-
-
+*/
 
 
 
@@ -160,7 +157,7 @@ public:
 	{
 		int n = yold.Size(); //f: R^n -> R^n
 		double eps = 1e-8;
-		int maxcnt = 20;
+		int maxcnt = 10;
 		int cnt = 0;
 		double err = eps + 1;
 
@@ -168,6 +165,7 @@ public:
 		Vector<> k(stages*n);
 		Vector<> f(stages*n);
 		Vector<> fi(n);
+		Vector<> yi(n);
 		Vector<> F(stages*n); //Psi
 		Vector<> time(stages);
 		Matrix<> dfdy(n);
@@ -175,13 +173,12 @@ public:
 		Matrix<> InvDF(stages*n);
 		Identity Id(stages*n);
 		Vector<> update(stages*n);
-
+		fi = 317;
 		for (int i = 0; i < stages; i++) // Quadraturknoten, Startwerte
 		{
 			time(i) = t + c(i)*h;
 			k.Range(i*n, (i + 1)*n) = yold;
 		}
-
 		//Newton
 		//Newton verfahren wind auf die funktion F(k) := k - f(t + c(i)*h, yold + h* sum(A(i,l)*k(l)))
 		while ((err > eps) && (cnt < maxcnt))
@@ -195,7 +192,8 @@ public:
 
 			for (int i = 0; i < stages; i++) // f(time(i),y(i)) auswerten
 			{
-				func.Eval(time(i), y.Range(i*n, (i + 1)*n), fi);
+				yi = y.Range(i*n, (i + 1)*n);
+				func.Eval(time(i), yi, fi);
 				f.Range(i*n, (i + 1)*n) = fi;
 			}
 
@@ -205,7 +203,8 @@ public:
 			DF = Id;
 			for (int i = 0; i < stages; i++)
 			{
-				func.EvalDfDy(time(i), y.Range(i*n, (i + 1)*n), dfdy);
+				yi = y.Range(i*n, (i + 1)*n);
+				func.EvalDfDy(time(i), yi, dfdy);
 				for (int m = 0; m < stages; m++)
 					for (int e1 = 0; e1 < n; e1++) //navigieren in der kleinen Blockmatrix (e1,e2)
 						for (int e2 = 0; e2 < n; e2++)
