@@ -14,7 +14,7 @@ plt1.show()
 
 
 for i in range(2,7):
-    plt2.semilogy([x[0] for x in s],  [x[i] for x in s],label='dichte')
+    plt2.semilogy([x[0] for x in s],  [x[i] for x in s],label='dichte ' + str(i))
 
 plt2.grid(True)
 plt2.legend()

@@ -23,7 +23,7 @@ public:
 
 int main()
 {
-	Bsp16 imprEV;
+	ImplMP implMP;
 	Gauss2 gauss2;
 
 	cout << 0 << endl << 0. << endl << 0.0 << 1. / 2 << endl;
@@ -32,7 +32,7 @@ int main()
 	double T = 10;
 	int stepsave = 1;
 
-	ofstream out_implMP("Pen_imprEV.out");
+	ofstream out_implMP("Pen_imolMP.out");
 	ofstream out_gauss2("Pen_gauss2.out");
 
 	Pendulum_ODE_Function pen(1, 1);

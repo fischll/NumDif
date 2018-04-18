@@ -16,7 +16,7 @@ set(CMAKE_INSTALL_PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/install)
 #add_executable(testNewton test_Newton.cpp)
 #add_executable(diode diode.cpp)
 add_executable(circuit_14 Bsp14_circuit.cpp)
-add_executable(test_12 test_12.cpp)
+#add_executable(test_12 test_12.cpp)
 add_executable(chr chemicalreactions.cpp)
 
 #target_link_libraries(pendulum mybla)
@@ -25,12 +25,12 @@ add_executable(chr chemicalreactions.cpp)
 #target_link_libraries(testNewton mybla)
 #target_link_libraries(diode mybla)
 target_link_libraries(circuit_14 mybla)
-target_link_libraries(test_12 mybla)
+#target_link_libraries(test_12 mybla)
 target_link_libraries(chr mybla)
 
 
 # install them to the install folder (relative to CMAKE_INSTALL_PREFIX)
-install(TARGETS chr circuit_14 test_12 DESTINATION .)
+install(TARGETS chr circuit_14 DESTINATION .)
 
 # add other folders such that they are built as well
 add_subdirectory(bla)

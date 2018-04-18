@@ -39,17 +39,15 @@ int main()
 	Vector<> c = { 0.001,0.001 };
 	Vector<> r = { 1000,1 };
 	double omega = 1;
-	double h = 0.001;
+	double h = 1e-1;
 	double t0 = 0.;
-	double T = 10;
+	double T = 100;
 	int stepsave = 1;
 
 	ofstream out_impl_MP("circuit_impl_MP.out");
-	ofstream out_expl_EV("circuit_expl_EV.out");
+	//ofstream out_expl_EV("circuit_expl_EV.out");
 	ofstream out_impl_EV("circuit_impl_EV.out");
-
-	ofstream out_bsp16("circuit_bsp16.out");
-	
+	ofstream out_bsp16("circuit_bsp16.out");	
 
 	Circuid_ODE_Function circuit(c, r, omega);
 	Vector<> y0(2);
@@ -57,7 +55,7 @@ int main()
 	y0(1) = 1;
 
 	ODESolver(circuit, impl_euler, t0, y0, T, h, out_impl_EV, stepsave);
-	ODESolver(circuit, expl_euler, t0, y0, T, h, out_expl_EV, stepsave);
+	//ODESolver(circuit, expl_euler, t0, y0, T, h, out_expl_EV, stepsave);
 	ODESolver(circuit, impl_MP, t0, y0, T, h, out_impl_MP, stepsave);
 	ODESolver(circuit, bsp16, t0, y0, T, h, out_bsp16, stepsave);
 	return 0;
