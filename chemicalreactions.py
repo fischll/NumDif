@@ -1,5 +1,11 @@
 import matplotlib.pyplot as plt1
 import matplotlib.pyplot as plt2
+import os
+
+os.system("cd build && make chr")
+os.system("build/chr")
+
+
 s=[]
 
 f = open('build/ChemicalReaction.txt','r')
