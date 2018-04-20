@@ -41,7 +41,7 @@ int main()
 	double T = 10;
 	int stepsave = 1;
 
-	ofstream out("circuit.out");
+	ofstream out("circuit.txt");
 	Circuid_ODE_Function circuit(c,r,omega);
 	Vector<> y0(2);
 	y0 = 0.;

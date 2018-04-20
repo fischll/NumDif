@@ -29,7 +29,7 @@ int main()
 	ImplicitEuler impl_euler;
 	double h = 0.01;
 
-	ofstream out("diode.out");
+	ofstream out("diode.txt");
 	Diode_ODE_Function dio(0.001, 0.2, 1, 1, 1);
 	Vector<> y0(1);
 	y0(0) = 0; // Anfangsspannung

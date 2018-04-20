@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt1
 import matplotlib.pyplot as plt2
 s=[]
 
-f = open('install/ChemicalReaction.out','r')
+f = open('build/ChemicalReaction.txt','r')
 for line in f:
     line = line.strip()
     s.append([float(x) for x in line.split(' ')])

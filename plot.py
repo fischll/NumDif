@@ -1,11 +1,11 @@
 import matplotlib.pyplot as plt
 
-#f = open('install/pendulum.out','r')
-#f = open('install/circuit.out','r')
-#f = open('install/diode.out', 'r')
-f = open('install/DifUE_implMP.out', 'r')
-# = open('install/DifUE_explEV.out', 'r')
-h = open('install/DifUE_gauss2.out', 'r')
+#f = open('build/pendulum.txt','r')
+#f = open('build/circuit.txt','r')
+#f = open('build/diode.txt', 'r')
+f = open('build/DifUE_implMP.txt', 'r')
+# = open('build/DifUE_explEV.txt', 'r')
+h = open('build/DifUE_gauss2.txt', 'r')
 
 
 s=[]

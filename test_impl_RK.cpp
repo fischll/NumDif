@@ -28,9 +28,9 @@ int main()
 	double T = 2;
 	int stepsave = 1;
 
-	ofstream out_implMP("EFunc_implMP.out");
-	ofstream out_explEV("EFunc_explEV.out");
-	ofstream out_gauss2("EFunc_gauss2.out");
+	ofstream out_implMP("EFunc_implMP.txt");
+	ofstream out_explEV("EFunc_explEV.txt");
+	ofstream out_gauss2("EFunc_gauss2.txt");
 	E_ODE_Function	efunc;
 	Vector<> y0 = { 1. };
 

@@ -1,8 +1,8 @@
 import matplotlib.pyplot as plt
 
-#f = open('install/pendulum.out','r')
-#f = open('install/circuit.out','r')
-f = open('install/diode.out', 'r')
+#f = open('build/pendulum.txt','r')
+#f = open('build/circuit.txt','r')
+f = open('build/diode.txt', 'r')
 
 s=[]
 for line in f:

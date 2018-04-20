@@ -1,0 +1,1 @@
+/usr/bin/c++      CMakeFiles/testNewton.dir/test_Newton.cpp.o  -o testNewton -rdynamic bla/libmybla.so -Wl,-rpath,/mnt/c/Users/lorenz/source/repos/ode/build/bla: 

@@ -44,10 +44,10 @@ int main()
 	double T = 100;
 	int stepsave = 1;
 
-	ofstream out_impl_MP("circuit_impl_MP.out");
-	//ofstream out_expl_EV("circuit_expl_EV.out");
-	ofstream out_impl_EV("circuit_impl_EV.out");
-	ofstream out_bsp16("circuit_bsp16.out");	
+	ofstream out_impl_MP("circuit_impl_MP.txt");
+	//ofstream out_expl_EV("circuit_expl_EV.txt");
+	ofstream out_impl_EV("circuit_impl_EV.txt");
+	ofstream out_bsp16("circuit_bsp16.txt");	
 
 	Circuid_ODE_Function circuit(c, r, omega);
 	Vector<> y0(2);

@@ -43,7 +43,7 @@ int main()
 	int writeout_stepsize = 1;
 
 
-	ofstream out("ChemicalReaction.out");
+	ofstream out("ChemicalReaction.txt");
 	Vector<> k = { 1.34, 1.6e9, 8e3, 4e7, 1e0 };
 	Vector<> y0 = { 0.05, 1e-4, 1e-10, 1e-1, 1e-4 };
 	ChemicalReactions_ODE_Function oregano(k);

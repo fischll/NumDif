@@ -32,15 +32,15 @@ int main()
 	double T = 10;
 	int stepsave = 1;
 
-	ofstream out_implMP("Pen_imolMP.out");
-	ofstream out_gauss2("Pen_gauss2.out");
+	ofstream out_implMP("Pen_imolMP.txt");
+	ofstream out_gauss2("Pen_gauss2.txt");
 
 	Pendulum_ODE_Function pen(1, 1);
 	Vector<> y0(2);
 	y0(0) = M_PI / 2; //das ist ja nur ein startwert und pi ging nicht
 	y0(1) = 0;
 
-	ODESolver(pen,  imprEV, t0, y0, T, h, out_implMP, stepsave);
+	ODESolver(pen,  implMP, t0, y0, T, h, out_implMP, stepsave);
 	ODESolver(pen, gauss2, t0, y0, T, h, out_gauss2, stepsave);
 
 	return 0;

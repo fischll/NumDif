@@ -27,7 +27,7 @@ int main()
 	ImplicitEuler impl_euler;
 	double h = 0.01;
 
-	ofstream out("Pendulum.out");
+	ofstream out("Pendulum.txt");
 	Pendulum_ODE_Function pen(1, 1);
 	Vector<> y0(2);
 	y0(0) = M_PI / 2; //das ist ja nur ein startwert und pi ging nicht

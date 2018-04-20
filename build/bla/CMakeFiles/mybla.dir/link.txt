@@ -1,0 +1,1 @@
+/usr/bin/c++  -fPIC   -shared -Wl,-soname,libmybla.so -o libmybla.so CMakeFiles/mybla.dir/calcinverse.cpp.o CMakeFiles/mybla.dir/localheap.cpp.o CMakeFiles/mybla.dir/exception.cpp.o 
