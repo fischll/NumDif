@@ -1,1 +1,0 @@
-/usr/bin/c++      CMakeFiles/pendulum.dir/pendulum.cpp.o  -o pendulum -rdynamic bla/libmybla.so -Wl,-rpath,/mnt/c/Users/lorenz/source/repos/ode/build/bla: 

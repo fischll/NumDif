@@ -1,1 +1,0 @@
-/usr/bin/c++      CMakeFiles/diode.dir/diode.cpp.o  -o diode -rdynamic bla/libmybla.so -Wl,-rpath,/mnt/c/Users/lorenz/source/repos/ode/build/bla: 
