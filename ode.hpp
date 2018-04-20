@@ -34,8 +34,9 @@ class SSM
 {
 public:
   // do the step
-  virtual void Step (double t, double h, const ODE_Function & func, 
+  virtual bool Step (double t, double h, const ODE_Function & func,
                      const Vector<> & yold, Vector<> & ynew) = 0;
+  virtual int Order() = 0;
 };
 
 
@@ -65,10 +66,52 @@ void ODESolver (const ODE_Function & func, SSM & ssm,
             out << " " << yold(i);
           out << "\n";
         }
-
       ssm.Step (t, h, func, yold, ynew);
       yold = ynew;
       t += h; step++;
+    }
+}
+
+void AdaptiveSolver(const ODE_Function& func, SSM& ssm,
+                    SSM& ssm_ho, double t0, const Vector<>& y0,
+                    double tend, double hstart, ostream& out, double eps)
+{
+  double alpha_max = 2.;
+  double alpha_min = 0.2;
+  double beta = 0.95;
+  double t = t0;
+  auto n = y0.Size();
+  Vector<> yold(n), ynew(n), ynew_ho(n);
+  yold = y0;
+  double h = hstart;
+  while (t<tend)
+    {
+      bool do_step = true;
+      while (do_step)
+        {
+          auto success = ssm.Step(t,h,func,yold,ynew);
+          auto success_ho = ssm_ho.Step(t,h,func,yold,ynew_ho);
+
+          if(!success || !success_ho){ h = h/2; continue; }
+          // double q = L2Norm(ynew_ho-ynew);
+          double q = 0;
+          for(auto i : Range(n))
+            q += fabs(ynew_ho[i]-ynew[i])/fabs(ynew_ho[i]);
+          q /= eps*h;
+          if(q <= 1)
+            {
+              h = beta * min2(alpha_max, pow(q,-1./ssm.Order())) * h;
+              do_step = false;
+            }
+          else
+            h = beta * max2(alpha_min, pow(q,-1./ssm.Order())) * h;
+        }
+      yold = ynew_ho;
+      t += h;
+      out << t;
+      for(auto i : Range(ynew_ho.Size()))
+        out << " " << ynew_ho[i];
+      out << " " << h << "\n";
     }
 }
 
@@ -87,14 +130,15 @@ class ExplicitEuler : public SSM
 {
   Vector<> f;
 public:
-  virtual void Step (double t, double h, const ODE_Function & func,
+  virtual bool Step (double t, double h, const ODE_Function & func,
                      const Vector<> & yold, Vector<> & ynew) override
   {
     f.SetSize(yold.Size());
-
     func.Eval (t, yold, f);
     ynew = yold + h * f;
+    return true;
   }
+  virtual int Order() override { return 1; }
 };
 
 
@@ -102,7 +146,7 @@ class ImprovedEuler : public SSM
 {
   Vector<> f;
 public:
-  virtual void Step (double t, double h, const ODE_Function & func,
+  virtual bool Step (double t, double h, const ODE_Function & func,
                      const Vector<> & yold, Vector<> & ynew) override
   {
     f.SetSize(yold.Size());
@@ -112,7 +156,10 @@ public:
 
     func.Eval (t+h/2.0, ynew, f);
     ynew = yold + h * f;
+    return true;
   }
+
+  virtual int Order() override { return 1; }
 };
 
 
@@ -122,7 +169,7 @@ class ImplicitEuler : public SSM
   Vector<> f, update;
 
 public:
-  virtual void Step (double t, double h, const ODE_Function & func,
+  virtual bool Step (double t, double h, const ODE_Function & func,
                      const Vector<> & yold, Vector<> & ynew) override
   {
     auto n = yold.Size();
@@ -156,7 +203,9 @@ public:
 	ynew -= update;
 	cnt++;
       }
-
+    if(cnt == 20)
+      return false;
+    return true;
   }
+  virtual int Order() override { return 1; }
 };
-
