@@ -33,7 +33,7 @@ int main()
   double alpha_max = 1.75;
   double beta = 0.925;
   double t0 = 0;
-  double tend =  17.0652166;
+  double tend = 17.0652166;
   double epsilon = 1e-8;
   int writeout_stepsize = 1;
   double mu = 0.012277471;
