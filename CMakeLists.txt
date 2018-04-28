@@ -18,6 +18,7 @@ add_executable(circuit_14 Bsp14_circuit.cpp)
 add_executable(test_12 test_12.cpp)
 add_executable(chr chemicalreactions.cpp)
 add_executable(satelit satelit.cpp)
+add_executable(pen_H pendulum_Hamilton.cpp)
 
 target_link_libraries(pendulum mybla)
 #target_link_libraries(circuit mybla)
@@ -28,10 +29,11 @@ target_link_libraries(circuit_14 mybla)
 target_link_libraries(test_12 mybla)
 target_link_libraries(chr mybla)
 target_link_libraries(satelit mybla)
+target_link_libraries(pen_H mybla)
 
 
 # install them to the install folder (relative to CMAKE_INSTALL_PREFIX)
-install(TARGETS satelit ode_demo pendulum testImplRK testNewton diode test_12 chr circuit_14 DESTINATION .)
+install(TARGETS pen_H satelit ode_demo pendulum testImplRK testNewton diode test_12 chr circuit_14 DESTINATION .)
 
 # add other folders such that they are built as well
 add_subdirectory(bla)
