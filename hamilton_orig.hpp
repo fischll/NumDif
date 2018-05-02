@@ -3,9 +3,9 @@
 class Hamilton_Function
 {
 public:
-  virtual double EvalV(const Vector<> & q)const;
-  virtual double EvalT(const Vector<> & p)const ;
-  virtual double Eval(const Vector<> & p, const Vector<> & q) const
+  virtual double EvalV(const Vector<> & q)const=0;
+  virtual double EvalT(const Vector<> & p)const=0;
+  virtual double Eval(const Vector<> & p, const Vector<> & q)const
   {
     return EvalV(q) + EvalT(p);
   }
@@ -100,7 +100,7 @@ void ODESolver_Hamilton(const Hamilton_Function & func, SSM_Hamilton & ssm,
 	{
 	  out << t;
 	  for (int i = 0; i < n; i++)
-	    out << " " << pold(i) << " " << qold(i);
+	    out << " " << pold(i) << " " << qold(i) << " " << func.Eval(pold,qold);
 	  out << "\n";
 	}
       ssm.Step(h, func, pold, qold, pnew, qnew);
@@ -124,8 +124,32 @@ public:
     func.EvalDV(qold,DV);
     pnew = pold - h*DV;
     func.EvalDT(pnew,DT);
-    qnew = pold + h*DT;
+    qnew = qold + h*DT;
     return true;
   }
   virtual int Order() override {return 1;}
+};
+
+class StoermerVerlet : public SSM_Hamilton
+{
+  Vector<> DV, DT, phalbe;
+public:
+  virtual bool Step( double h, const Hamilton_Function & func,
+		     const Vector<> & pold, const Vector<> & qold, Vector<> & pnew, Vector<> & qnew) override
+  {
+    DV.SetSize(pold.Size());
+    DT.SetSize(qold.Size());
+    phalbe.SetSize(qold.Size());
+    
+    func.EvalDV(qold,DV);
+    phalbe = pold - h/2*DV;
+    
+    func.EvalDT(phalbe,DT);
+    qnew = qold + h*DT;
+    
+    func.EvalDV(qnew,DV);
+    pnew = phalbe - h/2*DV;
+    return true;
+  }
+  virtual int Order() override {return 2;}
 };

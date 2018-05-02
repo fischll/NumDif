@@ -1,6 +1,5 @@
 #! /bin/bash
 
-
 if [ ! -d "build" ]; then
     mkdir build
     cd build
@@ -9,7 +8,9 @@ else
     cd build
 fi
 
-make -j satelit
-./satelit
+make -j
+./pendulumh
 cd ..
-python satelit.py
+python pendulumh.py
+
+
