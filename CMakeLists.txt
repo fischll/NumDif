@@ -12,8 +12,10 @@ add_executable(demo_bla demo_bla.cpp)
 add_executable(ode_demo ode_demo.cpp)
 
 add_executable(pendulum pendulum.cpp)
+add_executable(bsp26 bsp26.cpp)
 
 target_link_libraries(pendulum mybla)
+target_link_libraries(bsp26 mybla)
 
 # install them to the install folder (relative to CMAKE_INSTALL_PREFIX)
 install(TARGETS demo_bla ode_demo DESTINATION .)
