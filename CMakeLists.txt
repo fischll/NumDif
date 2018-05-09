@@ -37,5 +37,5 @@ install(TARGETS pendulumh satelit ode_demo pendulum testImplRK testNewton diode 
 
 # add other folders such that they are built as well
 add_subdirectory(bla)
-#add_subdirectory(rattle)
+add_subdirectory(rattle)
 
