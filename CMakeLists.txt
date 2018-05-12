@@ -8,7 +8,9 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_INSTALL_PREFIX ${CMAKE_CURRENT_SOURCE_DIR})#/install)
 
 # create our first 2 executables:
+add_executable(demo_bla demo_bla.cpp)
 add_executable(ode_demo ode_demo.cpp)
+
 add_executable(pendulum pendulum.cpp)
 #add_executable(circuit circuit.cpp)
 add_executable(testImplRK test_impl_RK.cpp)
@@ -20,6 +22,8 @@ add_executable(chr chemicalreactions.cpp)
 add_executable(satelit satelit.cpp)
 add_executable(pendulumh pendulumh.cpp)
 
+add_executable(bsp26 bsp26.cpp)
+target_link_libraries(bsp26 mybla)
 target_link_libraries(pendulum mybla)
 #target_link_libraries(circuit mybla)
 target_link_libraries(testImplRK mybla)

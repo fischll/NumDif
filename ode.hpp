@@ -36,6 +36,10 @@ public:
 	virtual int Order() = 0;
 };
 
+
+
+
+
 // the time integration loop
 void ODESolver(const ODE_Function & func, SSM & ssm,
 	double t0, Vector<> & y0, double tend, double h,
@@ -64,8 +68,8 @@ void ODESolver(const ODE_Function & func, SSM & ssm,
 //time integration loop with adaptive step size
 void ODESolverAdaptive(const ODE_Function & func, SSM & base_methode, SSM & estimate_methode, double t0, Vector<> & y0, double tend,
 	ostream & out, double epsilon, double hmin = 1e-6, double hmax = 1, double alpha_min = 0.5, double alpha_max = 1.5, double beta = 0.925, size_t writeout_stepsize = 1) 
-	/*rechte seite funktion*//*Methode mit niedriger KO*/ /*Methode mit höherer KO*/ /*Startwert Zeit*/ /*Startwert Ort*/ /*Datei zum rausschreiben*/
-	/*genauigkeit die man sich wünscht... insgesammt (T-t0)*epsilon*/ /*min Schrittweite*/ /*max Schrittweite*/ /*alpha_min*/ /*alpha_max*/ /*beta*/
+	/*rechte seite funktion*//*Methode mit niedriger KO*/ /*Methode mit hÃ¶herer KO*/ /*Startwert Zeit*/ /*Startwert Ort*/ /*Datei zum rausschreiben*/
+	/*genauigkeit die man sich wÃ¼nscht... insgesammt (T-t0)*epsilon*/ /*min Schrittweite*/ /*max Schrittweite*/ /*alpha_min*/ /*alpha_max*/ /*beta*/
 {
 	int n = y0.Size();
 	Vector<> yold(n), ynew(n), ydach(n);
@@ -79,7 +83,7 @@ void ODESolverAdaptive(const ODE_Function & func, SSM & base_methode, SSM & esti
 		if (step%writeout_stepsize == 0)
 		{
 			out << t << " ";
-			out << hnew; //Größe vom h
+			out << hnew; //GrÃ¶ÃŸe vom h
 			for (size_t i = 0; i < n; i++)
 				out << " " << yold(i);
 			out << "\n";
@@ -134,6 +138,9 @@ void ODESolverAdaptive(const ODE_Function & func, SSM & base_methode, SSM & esti
 
 
 /* *************** Here are the specific single-step methods *************** */
+
+
+
 class ExplicitEuler : public SSM
 {
 	Vector<> f;
@@ -148,6 +155,8 @@ public:
 	}
 	virtual int Order() override { return 1; }
 };
+
+
 class ImprovedEuler : public SSM
 {
 	Vector<> f;
@@ -164,6 +173,8 @@ public:
 	}
 		virtual int Order() override { return 2; }
 };
+
+
 class ImplicitEuler : public SSM
 {
 	Matrix<> DF, funcdfdy, InvDF;
@@ -202,3 +213,4 @@ public:
 	}
 	virtual int Order() override { return 1; }
 };
+
