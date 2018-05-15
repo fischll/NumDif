@@ -22,6 +22,8 @@ add_executable(chr chemicalreactions.cpp)
 add_executable(satelit satelit.cpp)
 add_executable(pendulumh pendulumh.cpp)
 
+add_executable(pdae2ode pdae2ode.cpp)
+
 add_executable(bsp26 bsp26.cpp)
 target_link_libraries(bsp26 mybla)
 target_link_libraries(pendulum mybla)
@@ -34,6 +36,7 @@ target_link_libraries(test_12 mybla)
 target_link_libraries(chr mybla)
 target_link_libraries(satelit mybla)
 target_link_libraries(pendulumh mybla)
+target_link_libraries(pdae2ode mybla)
 
 
 # install them to the install folder (relative to CMAKE_INSTALL_PREFIX)
