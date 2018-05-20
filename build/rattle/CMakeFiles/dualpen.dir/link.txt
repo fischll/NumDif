@@ -1,0 +1,1 @@
+/usr/bin/c++    -rdynamic CMakeFiles/dualpen.dir/dualpendulum_DAE.cpp.o CMakeFiles/dualpen.dir/rattle.cpp.o  -o dualpen -Wl,-rpath,/home/lorenz/Documents/NumDif/build/bla: -lGL -lGLU -lglut ../bla/libmybla.so 

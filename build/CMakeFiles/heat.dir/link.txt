@@ -1,0 +1,1 @@
+/usr/bin/c++    -rdynamic CMakeFiles/heat.dir/heateqn.cpp.o  -o heat -Wl,-rpath,/home/lorenz/Documents/NumDif/build/bla: bla/libmybla.so 

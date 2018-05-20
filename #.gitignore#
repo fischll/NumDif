@@ -1,0 +1,6 @@
+*~
+build
+/.vs/.vs
+/.vs
+/install
+/CMakeSettings.json
