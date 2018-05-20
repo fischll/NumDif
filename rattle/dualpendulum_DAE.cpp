@@ -24,7 +24,7 @@ class Pendulum : public ConstrainedHamiltonian
   double l1;
   double l2;
 public:
-  Pendulum () { m1 = 5; m2 = 1; g = 1; l1=1; l2=1; }
+  Pendulum () { m1 = 5; m2 = 3; g = 1; l1=0.7; l2=1; }
 
   virtual int Dim () const { return 4; }
   virtual int DimConstraints () const { return 2; }
