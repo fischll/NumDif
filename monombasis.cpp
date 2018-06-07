@@ -7,7 +7,7 @@ using namespace ngbla;
 
 double eval(Vector<> & coef, int grad, double x){
   double ret = coef(0);
-  for(int i = 1; i < grad; i++)
+  for(int i = 1; i <= grad; i++)
     ret += coef(i) * pow(x,i);
   return ret;
 }
@@ -27,10 +27,7 @@ int main(int nargs, char* argv[]){
   double b = 1.;
   
   double u0 = 0.; //Dirichlet Randbedingung
-  double u_strich_1 = 1.; //Dirichlet Randbedingung
-  double tmp;
-
-  double h = (b-a)/I;
+  double u_strich_1 = 1.; //Neumann Randbedingung
   ofstream out("monombasis.txt");
 
   Vector<double> rhs(p);
@@ -46,17 +43,16 @@ int main(int nargs, char* argv[]){
   A=0.;
   for(int i=1;i<p+1;i++)
     for(int j=1;j<p+1;j++)
-	A(i-1,j-1) = 1./(i+j+1) + ((double)i*j)/((i-1)+(j-1)+1);
+      A(i-1,j-1) = 1./(i+j+1) + ((double)i*j)/((i-1)+(j-1)+1);
   
   CalcInverse(A,A_inv);
   u.Range(1,p+1) = A_inv*rhs;
-  cout << A << endl;
 
   //out << xWert << " " << yWert << " " << Energie << endl;
-  out << a << " " << u0 << " " << u0 << "\n";
+  // out << a << " " << u0 << " " << u0 << "\n;"
   for(double x = 0; x<1; x+=0.05){ 
     out << x << " " << eval(u,p,x) ;
-    out << " " << (exp(2-x) - exp(x)+1 - exp(2))/(1-exp(2));
+    out << " " << (-exp(1-x) - exp(2-x) - exp(x) + exp(x+1) + 1 + exp(2))/(exp(2)+1);
     out << "\n";
   }
   
