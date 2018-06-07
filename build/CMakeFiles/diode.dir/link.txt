@@ -1,1 +1,0 @@
-/usr/bin/c++    -rdynamic CMakeFiles/diode.dir/diode.cpp.o  -o diode -Wl,-rpath,/home/lorenz/Documents/NumDif/build/bla: bla/libmybla.so 

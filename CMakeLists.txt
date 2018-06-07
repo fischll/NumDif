@@ -23,8 +23,9 @@ add_executable(satelit satelit.cpp)
 add_executable(pendulumh pendulumh.cpp)
 
 add_executable(pdae2ode pdae2ode.cpp)
-add_executable(heat heateqn.cpp)
 add_executable(bsp26 bsp26.cpp)
+add_executable(heat heateqn.cpp)
+add_executable(monom monombasis.cpp)
 
 target_link_libraries(bsp26 mybla)
 target_link_libraries(pendulum mybla)
@@ -39,9 +40,10 @@ target_link_libraries(satelit mybla)
 target_link_libraries(pendulumh mybla)
 target_link_libraries(pdae2ode mybla)
 target_link_libraries(heat mybla)
+target_link_libraries(monom mybla)
 
 # install them to the install folder (relative to CMAKE_INSTALL_PREFIX)
-install(TARGETS heat pendulumh satelit ode_demo pendulum testImplRK testNewton diode test_12 chr circuit_14 DESTINATION .)
+install(TARGETS monom heat pendulumh satelit ode_demo pendulum testImplRK testNewton diode test_12 chr circuit_14 DESTINATION .)
 
 # add other folders such that they are built as well
 add_subdirectory(bla)

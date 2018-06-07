@@ -81,7 +81,6 @@ int main(){
 	  if(i<n/2)
 	    out << " " << k1*(u(i)-u(i+1))/h << "\n";
 	  else
-	    
 	    out << " " << k2*(u(i)-u(i+1))/h << "\n";
 	}
     }

@@ -1,1 +1,0 @@
-/usr/bin/c++    -rdynamic CMakeFiles/bsp26.dir/bsp26.cpp.o  -o bsp26 -Wl,-rpath,/home/lorenz/Documents/NumDif/build/bla bla/libmybla.so 

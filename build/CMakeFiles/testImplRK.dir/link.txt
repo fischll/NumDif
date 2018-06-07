@@ -1,1 +1,0 @@
-/usr/bin/c++    -rdynamic CMakeFiles/testImplRK.dir/test_impl_RK.cpp.o  -o testImplRK -Wl,-rpath,/home/lorenz/Documents/NumDif/build/bla: bla/libmybla.so 

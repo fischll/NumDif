@@ -5,12 +5,24 @@ using namespace ngbla;
 #include <fstream>
 #include <iostream>
 
-int main(){
-  int writeout_stepsize = 1;
-  int p = 32; //Anzahl der Stützstellen == höchster Polynomgrad-1 == Anzahl der Basisfunktionen x^i
-  int I = p-1; //Anzahl der Intervalle
-  //seien {u0,..up-1} die Koeffizeinten der Basispolynome(=Monome) also Polynomkoeffizienten dann ist u0 bereits bekannt, da dort Dirichlet Randbedingungen
-  //Somit bleiben (p-1) koeffizienten über
+double eval(Vector<> & coef, int grad, double x){
+  double ret = coef(0);
+  for(int i = 1; i < grad; i++)
+    ret += coef(i) * pow(x,i);
+  return ret;
+}
+
+
+int main(int nargs, char* argv[]){
+  istringstream ss(argv[1]);
+  int p;
+  if (!(ss >> p))
+    cerr << "Invalid number " << argv[1] << '\n';
+  int n = p+1; //Anzahl der Stützstellen == Anzahl der Basisfunktionen x^i
+  int I = p; //Anzahl der Intervalle
+  //seien {u0,..up==un-1} die Koeffizeinten der Basispolynome(=Monome) also Polynomkoeffizienten
+  //dann ist u0 bereits bekannt, da dort Dirichlet Randbedingungen
+  //Somit bleiben p koeffizienten über
   double a = 0.;
   double b = 1.;
   
@@ -22,52 +34,32 @@ int main(){
   ofstream out("monombasis.txt");
 
   Vector<double> rhs(p);
-  Vector<double> u(p);
+  Vector<double> u(p+1);
   
   Matrix<double> A(p);
   Matrix<double> A_inv(p);
-
-  for(int j=0;j<p;j++){
-    rhs(j) = 1./(j+1)-u_strich_1;
-  }
+  rhs = 0.;
+  u=0.;
+  for(int j=0;j<p;j++)
+    rhs(j) = 1./(j+2) + u_strich_1;
   
   A=0.;
-  for(int i=0;i<p;i++){
-    for(int j=0;j<p;j++){
-      if(i==0||j==0){
-	if(i==0&&j==0)
-	  A(i,j)=1;
-	else
-	  A(i,j)=0;
-      }
-      else{
-	A(i,j) = 1./(i*j+1) + double(i*j)/((i-1)*(j-1)+1);
-      }
-    }
-  }
+  for(int i=1;i<p+1;i++)
+    for(int j=1;j<p+1;j++)
+	A(i-1,j-1) = 1./(i+j+1) + ((double)i*j)/((i-1)+(j-1)+1);
   
   CalcInverse(A,A_inv);
-  u = A_inv*rhs;
-  /*cout << A << endl;
-    cout << endl << A_inv << endl;
-    cout << endl << rhs << endl;*/
-    cout << endl << A << endl;
-    cout << endl << u << endl;
-  
+  u.Range(1,p+1) = A_inv*rhs;
+  cout << A << endl;
 
   //out << xWert << " " << yWert << " " << Energie << endl;
-    out << a << " " << u0 << " " << u0 << "\n";
-  for(int i = 0; i<p; i++)
-    {
-      tmp = 0.;
-      for(int j=0;j<p;j++){
-	tmp += u(j) * pow(a + i*h, j);
-      }
-      out << a + i*h << " " << tmp ;
-      tmp = a + i*h;
-      out << " " << (exp(2-tmp) - exp(tmp)+1 - exp(2))/(1-exp(2));
-      out << "\n";
-    }
+  out << a << " " << u0 << " " << u0 << "\n";
+  for(double x = 0; x<1; x+=0.05){ 
+    out << x << " " << eval(u,p,x) ;
+    out << " " << (exp(2-x) - exp(x)+1 - exp(2))/(1-exp(2));
+    out << "\n";
+  }
   
   return 0;
 }
+

@@ -1,1 +1,0 @@
-/usr/bin/c++    -rdynamic CMakeFiles/satelit.dir/satelit.cpp.o  -o satelit -Wl,-rpath,/home/lorenz/Documents/NumDif/build/bla: bla/libmybla.so 

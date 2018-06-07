@@ -1,1 +1,0 @@
-/usr/bin/c++    -rdynamic CMakeFiles/pendulum.dir/pendulum.cpp.o  -o pendulum -Wl,-rpath,/home/lorenz/Documents/NumDif/build/bla: bla/libmybla.so 
