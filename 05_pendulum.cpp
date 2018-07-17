@@ -5,8 +5,10 @@
 
 // a simple linear algebra library
 #include "bla/bla.hpp"
+using namespace ngbla;
 #include "ode.hpp"
 #include "RK_orig.hpp"
+
 
 using namespace ngbla;
 
@@ -19,7 +21,7 @@ public:
 	Pendulum_ODE_Function(double am, double ak) { g = am; l = ak; }
 
 	//alpha, omega
-	virtual void Eval(double t, const Vector<> & y, Vector<> & f) const
+	virtual void Eval(double t, const Vector<>& y, Vector<>& f) const
 	{
 		f(0) = y(1);
 		f(1) = -(g/l) * sin(y(0));
@@ -29,13 +31,13 @@ public:
 
 int main()
 {
-	ImplicitEuler impl_euler;
-
-	ofstream out("Pendulum.txt");
-	Pendulum_ODE_Function pen(1, 1);
-	Vector<> y0(2);
-	y0ms(0) = Pi/2;
-	y0ms(1) = 0;
-	ODESolver(pen, impl_euler, 0, y0, 1000, 0.1, out);
-	return 0;
+  ImplicitEuler impl_euler;
+  
+  ofstream out("Pendulum.txt");
+  Pendulum_ODE_Function pen(1, 1);
+  Vector<> y0(2);
+  y0(0) = M_PI/2;
+  y0(1) = 0;
+  ODESolver(pen, impl_euler, 0, y0, 1000, 0.1, out);
+  return 0;
 }

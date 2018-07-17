@@ -50,7 +50,7 @@ int main(int nargs, char* argv[]){
 
   //out << xWert << " " << yWert << " " << Energie << endl;
   // out << a << " " << u0 << " " << u0 << "\n;"
-  for(double x = 0; x<1; x+=0.05){ 
+  for(double x = 0; x<1; x+=0.01){ 
     out << x << " " << eval(u,p,x) ;
     out << " " << (-exp(1-x) - exp(2-x) - exp(x) + exp(x+1) + 1 + exp(2))/(exp(2)+1);
     out << "\n";

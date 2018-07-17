@@ -1,7 +1,7 @@
 
 #include "bla/bla.hpp"
 using namespace ngbla;
-#include "hamiltonian.hpp"
+#include "hamilton.hpp"
 #include <math.h>
 using namespace std;
 

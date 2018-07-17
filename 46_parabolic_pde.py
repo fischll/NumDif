@@ -8,7 +8,7 @@ geo = SplineGeometry()
 #MakeRectangle(geo, (2,2),(3,3), leftdomain=2, rightdomain=1)
 MakeRectangle(geo, (0,0), (1,1), bc="outer")
 
-ngmesh = geo.GenerateMesh(maxh=0.02)
+ngmesh = geo.GenerateMesh(maxh=0.075)
 ngmesh.SetMaterial(1,"water")
 #ngmesh.SetMaterial(1,"air")
 #ngmesh.SetMaterial(2,"source")
@@ -20,7 +20,7 @@ t = 0
 tend = 10
 dt = 1e-4
 
-fes = H1(mesh, order=0, neumann="outer") #order=3
+fes = H1(mesh, order=3, dirichlet="outer") #order=3
 u, test_func = fes.TnT()
 
 M_stern = BilinearForm(fes)
@@ -37,7 +37,7 @@ f = LinearForm(fes)
 
 
 u = GridFunction(fes)
-u.Set(exp(-20*20*((x-0.5)*(x-0.5) + (y-0.2)*(y-0.2))))
+u.Set(exp(-20*20*((x-0.5)*(x-0.5) + (y-0.5)*(y-0.5))))
 
 
 

@@ -30,7 +30,7 @@ int main()
 	ofstream out("Pendulum.txt");
 	Pendulum_ODE_Function pen(1, 1);
 	Vector<> y0(2);
-	y0(0) = M_PI / 2; //das ist ja nur ein startwert und pi ging nicht
+	y0(0) = M_PI / 2;
 	y0(1) = 0;
 	ODESolver(pen, impl_euler, 0, y0, 1000, h, out, 10);
 	return 0;

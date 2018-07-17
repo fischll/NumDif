@@ -31,7 +31,7 @@ public:
         q += h * dH;
       }
     else
-      throw Exception("Not seperable not implemented!");
+      throw "Not seperable not implemented!";
   }
 };
 
@@ -53,7 +53,7 @@ public:
         p += - h/2 * dH;
       }
     else
-      throw Exception("Not seperable not implemented!");
+      throw "Not seperable not implemented!";
   }
 };
 
